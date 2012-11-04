@@ -1,4 +1,4 @@
-# Tmp Verzeichnisse
+﻿# Tmp Verzeichnisse
 include/cache/*
 include/backup/*
 
@@ -11,6 +11,9 @@ include/backup/*
 
 # Config und .htaccess
 .htaccess
+.htpasswd
+.htgroups
+.htusers
 include/includes/config.php
 
 # Dreamweaver, Eclipse, Netbeans und SVN ausschließen

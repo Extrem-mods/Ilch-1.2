@@ -6,6 +6,7 @@ ob_start();
 define('main', true);
 define('DEBUG', true);
 define('SCRIPT_START_TIME', microtime(true));
+define('PATH', dirname(__FILE__).'/');
 define('AJAXCALL', isset($_GET['ajax']) and $_GET['ajax'] == 'true');
 // Konfiguration zur Anzeige von Fehlern
 // Auf http://www.php.net/manual/de/function.error-reporting.php sind die verfügbaren Modi aufgelistet
