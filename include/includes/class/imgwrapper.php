@@ -21,26 +21,29 @@ class ImgWrapper{
     CONST GIF = 'gif';
     CONST SVG = 'svg';
 
-    //MIME Header für alle endungen
+    //MIME Header für alle Unterstützten Typen
     CONST PNG_HEADER = 'image/png';
     CONST JPG_HEADER = 'image/jpeg';
     CONST GIF_HEADER = 'image/gif';
     CONST SVG_HEADER = 'image/svg+xml';
 
-    private const CACHE = PATH.'cache/images/';
+    private static $cache = PATH.'cache/images/';
     protected $supported = array();
-    $private $img = NULL;
+    protected $lib = 0;
+    
 
     //**
     * Prüft welche Vormate durch die Klasse Unterstützt werden
     */
     public function __construct(){
         if($this->imagickUsable()){
+            $this->lib = $this->imagickUsable();
             $this->supported[PNG] = array('i' => true, 'c' = true);
             $this->supported[JPG] = array('i' => true, 'c' = true);
             $this->supported[GIV] = array('i' => true, 'c' = true);
             $this->supported[SVG] = array('i' => true, 'c' = false);
         }elseif(function_exists('gd_info')){
+            $this->lib = 3;
             $gdinfo = gd_info();
             $this->supported[JPG] = array('i' => false, 'c' = false);
             if(isset($gdinfo['JPEG Support'])){
@@ -63,7 +66,6 @@ class ImgWrapper{
         }else{
             throw new Exception('No image manipulation library available on this syste.');
         }
-
     }
 
     /**
@@ -93,14 +95,14 @@ class ImgWrapper{
         //Umwandeln von Prozentangaben
         if(preg_match('/[0-9]*[\.]?[0-9]*%/', $height)){
             $height = intval(substr($height, 0,-1));
-            $height = round($height * $result['height'])
+            $height = round($height * $result['height']/100)
         }else{
             $height = intval($height);
         }
 
-        if(preg_match('/[0-9]*[\.]?[0-9]*%/', $width)){
+        if(preg_match('/[0-9]+[\.]?[0-9]*%/', $width)){
             $width = intval(substr($width, 0,-1));
-            $width = round($width * $result['width'])
+            $width = round($width * $result['width']/100)
         }else{
             $width = intval($width);
         }
@@ -111,14 +113,14 @@ class ImgWrapper{
         }elseif($height == -1){
             $height = round($result['height'] / $result['width'] * $width);
             $new[0] = $new['height'] = $height;
-            $new[1] = $new['width'] = (int)$width;
+            $new[1] = $new['width'] = $width;
         }elseif($width == -1){
             $width = round($result['width'] / $result['height'] * $height);
-            $new[0] = $new['height'] = (int)$height;
+            $new[0] = $new['height'] = $height;
             $new[1] = $new['width'] = $width;
         }else{
-            $new[0] = $new['height'] = (int)$height;
-            $new[1] = $new['width'] = (int)$width;
+            $new[0] = $new['height'] = $height;
+            $new[1] = $new['width'] = $width;
         }
         return $new;
     }
@@ -144,11 +146,7 @@ class ImgWrapper{
     public function print($id, $typ = NULL, $height = -1, $width = -1){
         if($typ === NULL){
         }elseif(!empty($typ) && strlen($typ) == 3){
-            $const = 'self::' +strtoupper($typ) + '_HEADER';
-            if(!defined($const)){
-                return FALSE;
-            }
-            $header = constant($const);
+            $header = self::getHeader($typ)
         }else{
             return FALSE;
         }
@@ -175,7 +173,38 @@ class ImgWrapper{
     */
     public function imagickUsable(){
         if(class_exists('Imagick')) return 1;
-        if(system('/usr/bin/convert --version')) return 2;
+        if(@exec('/usr/bin/convert --version')) return 2;
         return FALSE;
+    }
+    
+    /**
+    *
+    */
+    public function getLibType(){
+        return $this->lib;
+    }
+    
+    public static function get($id){
+        $id = intval($id);
+        $result = db_query("select `path` VARCHAR(255) NOT NULL , `name` VARCHAR(45) NOT NULL , `typ` VARCHAR(3) NOT NULL FROM prefix_images where `id` = $id");
+        if($result = mysql_fetch_assoc($result)){
+            $file = PATH.$result['path'].$result['name'].'.'.$result['typ'];
+            if(file_exists($file)){
+                if(!headers_sent()){
+                    header(self::getHeader($typ));
+                }
+                return @readfile($file);
+            }
+        }
+    }
+    
+    public static function getHeader($typ){
+        $const = 'self::' +strtoupper($typ) + '_HEADER';
+        if(defined($const)){
+            $header = $constant($const);
+        }else{
+           $header = ''; 
+        }
+        return $header;
     }
 }
