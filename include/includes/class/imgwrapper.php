@@ -30,7 +30,7 @@ class ImgWrapper{
     private static $cache = PATH.'cache/images/';
     protected $supported = array();
     protected $lib = 0;
-    
+
 
     //**
     * Prüft welche Vormate durch die Klasse Unterstützt werden
@@ -73,17 +73,26 @@ class ImgWrapper{
     */
     public function __destruct(){
     }
-    
+
     /**
-    *
+    * Prüft ob eine Datei mit mit den gewünschten Maßen und typ gecacht und aktuell ist und gibt im erfolgsfall den entsprechenden Pfad zurück.
     */
     private function isCached($id, $typ, $height, $width){
-        $size = $this->transformSize
-        
-        $result = db_query("SELECT `last_edit` FROM `prefix_images_cache` WHERE `id` = $id AND `typ` = $typ ");
-        
+        $size = $this->transformSize($id, $height, $width);
+        $result = db_query("select `path`, `name` , `prefix_images`.`typ` as `typ`, UNIX_TIMESTAMP(`last_edit`) as `last_edit` FROM `prefix_images`
+            LEFT JOIN `prefix_images_cache` ON (`prefix_images`.`id` = `prefix_images_cache`.`id`)
+            where `prefix_images`.`id` = $id AND `prefix_images_cache`.`typ` = $typ AND `prefix_images_cache`.`height` = {$size['height']} AND `prefix_images_cache`.`width` = {$size['width']}");
+        if($resulr = mysql_fetch_array($result)){
+            $file = PATH . self:$cache . $id.'_'.$size['height'].'x'.$size['width'].'.'.$typ;
+            $file_org = PATH.$result['path'].$result['name'].'.'.$result['typ'];
+            if(file_exists($file) && file_exists($file_org)
+              && $result['last_edit'] >= filemtime($file) && $result['last_edit'] >= filemtime($file_org)){
+                return $file;
+            }
+        }
+        return false;
     }
-    
+
     /**
     * Wandelt Größenangaben in absolute Angaben um
     *
@@ -145,11 +154,17 @@ class ImgWrapper{
     */
     public function print($id, $typ = NULL, $height = -1, $width = -1){
         if($typ === NULL){
+            $result = db_query("select `typ` FROM `prefix_images` WHERE `id` = $id ");
+            if($result = mysql_fetch_row($result)){
+                $header = self::getHeader($result[0]);
+            }else{
+                $header = 'HTTP/1.0 404 Not Found';
+            }
         }elseif(!empty($typ) && strlen($typ) == 3){
-            $header = self::getHeader($typ)
-        }else{
-            return FALSE;
+            $header = self::getHeader($typ);
         }
+        if(!headers_sent()) header($header);
+        echo $this->fetch($id, $typ, $height, $width);
     }
 
     /**
@@ -158,7 +173,7 @@ class ImgWrapper{
     public function getSupportedTyps(){
         return $this->supported;
     }
-    
+
     /**
     *
     */
@@ -176,17 +191,20 @@ class ImgWrapper{
         if(@exec('/usr/bin/convert --version')) return 2;
         return FALSE;
     }
-    
+
     /**
     *
     */
     public function getLibType(){
         return $this->lib;
     }
-    
+
+    /**
+    * Git Ein Bild ohne Modifikation aus.
+    */
     public static function get($id){
         $id = intval($id);
-        $result = db_query("select `path` VARCHAR(255) NOT NULL , `name` VARCHAR(45) NOT NULL , `typ` VARCHAR(3) NOT NULL FROM prefix_images where `id` = $id");
+        $result = db_query("select `path`, `name` , `typ` FROM prefix_images where `id` = $id");
         if($result = mysql_fetch_assoc($result)){
             $file = PATH.$result['path'].$result['name'].'.'.$result['typ'];
             if(file_exists($file)){
@@ -197,14 +215,31 @@ class ImgWrapper{
             }
         }
     }
-    
+
+    /**
+    * Gibt den Kompletten header für ein angegebenen Dateityp zurück
+    */
     public static function getHeader($typ){
         $const = 'self::' +strtoupper($typ) + '_HEADER';
         if(defined($const)){
             $header = $constant($const);
         }else{
-           $header = ''; 
+           $header = '';
         }
         return $header;
+    }
+
+    /**
+    * Gibt das für das Betrachten eines Bildes nötigen mindest level zurück
+    * @return Fals Wenn das Bild nicht registriert ist, ansonsten 0 - -9 Je nach Level. Achtung: KAnn sowohl FALS als aich 0 zurück geben. Wenn ihr auf nichtexistenz oder auf 0 Prüft immer === verwenden
+    */
+    public static needRight($id){
+        $id = intval($id);
+        $result = db_query("select `min_right` FROM `prefix_images` where `id` = $id");
+        if($result = mysql_fetch_row($resulr)){
+            return $result[0];
+        }
+        return FALSE;
+
     }
 }
