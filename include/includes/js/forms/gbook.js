@@ -4,8 +4,8 @@ $(document).ready(function() {
 	$("#gbook_form").validate({
 		rules: {
 			name: { required: true, minlength: 2 },
-			mail: { required: true, email: true },
-			page: { required: true, url: true },
+			mail: { required: false, email: true },
+			page: { required: false, url: true },
 			txt: { required: true },
 			number: { required: true }
 		},
@@ -16,7 +16,19 @@ $(document).ready(function() {
 			txt: "Bitte eine Nachricht eingeben!",
 			number: "Bitte den Antispam ausf&uuml;llen!"
 		}
-	});	
+        });
+
+        //Zählen/Anzeigen verbleibender Zeichen
+        var gbookTextLengthEl = $('#gbookTextLength');
+        $('#gbookText').on('keyup', function() {
+            var maxLength = ic.gbook.maxTextLength,
+                curLength = this.value.length;
+            if (curLength > maxLength) {
+                this.value = this.value.substring(0, maxLength);
+                curLength = maxLength;
+            }
+            gbookTextLengthEl.val(maxLength - curLength);
+        });
 	
 	// GAESTEBUCH-KOMMENTAR					   
 	$("#comments").validate({

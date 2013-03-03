@@ -5,24 +5,8 @@
  * @version $Id
 */
 
-db_query("CREATE  TABLE IF NOT EXISTS `prefix_images` (
-        `id` INT NOT NULL AUTO_INCREMENT ,
-        `path` VARCHAR(255) NOT NULL ,
-        `name` VARCHAR(45) NOT NULL ,
-        `typ` VARCHAR(3) NOT NULL ,
-        `width` INT NOT NULL ,
-        `height` VARCHAR(45) NOT NULL ,
-        `min_right` INT NOT NULL Default 0,
-        PRIMARY KEY (`id`) )
-    ENGINE = InnoDB;");
-db_query("CREATE  TABLE IF NOT EXISTS `prefix_images_cache` (
-        `id` INT NOT NULL ,
-        `typ` VARCHAR(3) NOT NULL ,
-        `width` INT NOT NULL ,
-        `height` INT NOT NULL ,
-        `last_edit` TIMESTAMP NOT NULL ,
-        PRIMARY KEY (`id` ASC, `height` ASC, `width` ASC, `typ` ASC, `img_id` ASC))
-    ENGINE = InnoDB;");
+db_query("UPDATE `prefix_loader` SET `file` = 'pwcrypt.php' WHERE `file` = 'passwdcrypt.php' ");
 
-$rev='GD_1';
-$update_messages[$rev][] = 'Datenbank für die Verwalung der Wrapperklasse angelegt';
+$rev='243';
+$update_messages[$rev][] = 'Update der Passwortklasse.';
+
