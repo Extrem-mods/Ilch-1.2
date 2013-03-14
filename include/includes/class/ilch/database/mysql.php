@@ -1,13 +1,15 @@
 <?php
 defined('main') or die('no direct access');
 
+require_once(dirname(__FILE__)."/database.php");
+
 /**
  * Ilch database class.
  *
  * Use this class instead of old database functions.
  * Use select_* instead of query_*.
  */
-class Ilch_Database_Mysql
+class Ilch_Database_Mysql extends Ilch_Database_Database
 {
     /**
      * @var string|null
