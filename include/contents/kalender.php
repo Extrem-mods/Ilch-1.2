@@ -9,7 +9,7 @@ Kalender Script © by Nickel
 defined('main') or die('no direct access');
 // -----------------------------------------------------------|
 $title = $allgAr[ 'title' ] . ' :: Kalender';
-$hmenu = 'Kalender';
+$hmenu = array('Kalender');
 $header = Array(
 	'jquery/jquery.validate.js',
 	'forms/kalender.js'

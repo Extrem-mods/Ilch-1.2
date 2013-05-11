@@ -7,7 +7,7 @@
 defined('main') or die('no direct access');
 
 $title = $allgAr[ 'title' ] . ' :: News';
-$hmenu = 'News';
+$hmenu = array('News');
 $design = new design($title, $hmenu);
 $design->addheader('<link rel="alternate" type="application/atom+xml" title="News (Atom)" href="index.php?news-atom" />
 <link rel="alternate" type="application/rss+xml" title="News (RSS)" href="index.php?news-rss" />');

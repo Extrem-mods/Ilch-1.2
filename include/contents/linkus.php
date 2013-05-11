@@ -7,7 +7,7 @@
 defined('main') or die('no direct access');
 
 $title = $allgAr[ 'title' ] . ' :: LinkUs';
-$hmenu = 'LinkUs';
+$hmenu = array('LinkUs');
 $design = new design($title, $hmenu);
 // Variablen
 $dir = 'include/images/linkus/';

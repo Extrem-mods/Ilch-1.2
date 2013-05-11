@@ -47,7 +47,7 @@ function lastwars_get_memberlist ($id) {
 
 if ($menu->get(2) == '' OR $menu->getA(2) == 'p') {
     $title = $allgAr['title'] . ' :: Wars';
-    $hmenu = 'Wars';
+    $hmenu = array('Wars');
     $design = new design ($title , $hmenu);
     $design->header();
 

@@ -474,7 +474,7 @@ class design extends tpl {
         ob_end_clean();
         return ($buffer);
     }
-	
+
 	/**
 	* Baut das die Brotkruemelnavigation zusammen
 	*
@@ -482,31 +482,36 @@ class design extends tpl {
 	* @param tpl $tpl Die Tpl-Klasse für die index.htm. Wird für die deffinition spezieller Atribute benötigt
 	* @return string Brotkrumennavigation
 	*/
-	protected function buildBreadcrumb($data, tpl $tpl){	
+	protected function buildBreadcrumb($data, tpl $tpl){
 		if(is_array($data)){
 			$tmp = '';
-		
+
 			if($tpl->list_exists('hseparator')) $separator = $tpl->list_get('hseparator', array());
 			else $separator = '&raquo;';
 			if($tpl->list_exists('hlink')) $link = $tpl->list_get('hlink', array());
-			else $link = '<a href="%3" %2>%1</a>';
+			else $link = '<a href="index.php?%3" %2>%1</a>';
 			if($tpl->list_exists('hlast')) $last = $tpl->list_get('hlast', array());
-			else $last = '<span %2>%1</span>';	
-			
+			else $last = '<span %2>%1</span>';
+
 			while($v = array_shift($data)){
-				if($v['type'] === 'link'){
+				if(is_string($v)) $v = array('type'=>'last', 'text'=>$v);
+
+				switch(strtolower($v['type'])){
+				case 'link':
 					$v1 = (empty($v['text'])?'':$v['text']);
 					$v2 = (empty($v['attr'])?'':$v['attr']);
 					$v3 = (empty($v['href'])?'':$v['href']);
-					
+
 					$tmp .= str_replace(array('%1', '%2', '%3'), array($v1, $v2, $v3), $link);
-				}elseif($v['type'] === 'last'){
+					break;
+				case 'last':
 					$v1 = (empty($v['text'])?'':$v['text']);
 					$v2 = (empty($v['attr'])?'':$v['attr']);
-					
+
 					$tmp .= str_replace(array('%1','%2'),array($v1, $v2),$last);
-				}else{
-					continue;
+					break;
+				default:
+					continue 2;
 				}
 				if(!empty($data)){
 					$tmp .= $separator;

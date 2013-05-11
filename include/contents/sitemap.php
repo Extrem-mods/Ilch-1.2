@@ -7,7 +7,7 @@
 defined('main') or die('no direct access');
 
 $title = $allgAr[ 'title' ] . ' :: Sitemap';
-$hmenu = '<a href="?sitemap">Sitemap</a>';
+$hmenu = array('Sitemap');
 $design = new design($title, $hmenu);
 $design->header();
 // function show_sitemap shows sitemap for a given query

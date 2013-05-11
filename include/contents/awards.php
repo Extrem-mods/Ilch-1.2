@@ -7,7 +7,7 @@
 defined('main') or die('no direct access');
 
 $title = $allgAr[ 'title' ] . ' :: Awards';
-$hmenu = 'Awards';
+$hmenu = array('Awards');
 $design = new design($title, $hmenu);
 $design->header();
 

@@ -7,7 +7,7 @@
 defined('main') or die('no direct access');
 // -----------------------------------------------------------|
 $title = $allgAr[ 'title' ] . ' :: Joinus';
-$hmenu = 'Joinus';
+$hmenu = array('Joinus');
 $header = Array(
 	'jquery/jquery.validate.js',
 	'forms/joinus.js'

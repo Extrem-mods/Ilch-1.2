@@ -7,7 +7,7 @@
 defined('main') or die('no direct access');
 
 $title = $allgAr[ 'title' ] . ' :: Clankasse';
-$hmenu = 'Clankasse';
+$hmenu = array('Clankasse');
 $design = new design($title, $hmenu);
 $design->header();
 // loeschen
