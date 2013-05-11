@@ -66,7 +66,7 @@ class design extends tpl {
 
             $ar = array(
                 'TITLE' => $this->escape_explode($title),
-                'HMENU' => '<span id="icHmenu">' . $this->escape_explode($hmenu) . '</span>',
+                'HMENU' => $this->buildBreadcrumbe($hmenu, $tpl),
                 'SITENAME' => $this->escape_explode($allgAr[ 'title' ]),
                 'hmenuende' => '',
                 'vmenuende' => '',
@@ -305,7 +305,7 @@ class design extends tpl {
         }
     }
     // ####
-    protected function get_boxes($wo, $tpl) {
+    protected function get_boxes($wo, tpl $tpl) {
         global $lang, $allgAr, $menu;
         if (is_numeric($wo)) {
             $datei = 'menunr' . $wo;
@@ -474,4 +474,47 @@ class design extends tpl {
         ob_end_clean();
         return ($buffer);
     }
+	
+	/**
+	* Baut das die Brotkruemelnavigation zusammen
+	*
+	* @param array $data Ein Arry, welches die zu verarbeitenden Daten enthält. Aus Gründen der Abwärtskompatibilität kein Type Hinting. Wenn alle Templates umgestellt sind kann das noch eingeführt werden
+	* @param tpl $tpl Die Tpl Klasse für die index.htm. Wird für die deffinition spezieller Atribute benötigt
+	* @return string Brotkrumennavigation
+	*/
+	protected function buildBreadcrumb($data, tpl $tpl){
+		$tmp = '';
+		
+		if($tpl->list_exists('hseparator')) $separator = $tpl->list_get('hseparator', array());
+		else $separator = '&raquo;';
+		if($tpl->list_exists('hlink')) $link = $tpl->list_get('hlink', array());
+		else $link = '<a href="%3" title="%4" %2>%1</a>';
+		if($tpl->list_exists('hlast')) $last = $tpl->list_get('hlast', array());
+		else $last = '<span %2>%1</span>';		
+		
+		if(is_array($data)){
+			while($v = array_shift($data)){
+				if($v['type'] === 'link'){
+					$v1 = (empty($v['text'])?'':$v['text']);
+					$v2 = (empty($v['attr'])?'':$v['attr']);
+					$v3 = (empty($v['href'])?'':$v['href']);
+					
+					$tmp .= str_replace(array('%1', '%2', '%3'), array($v1, $v2, $v3), $link);
+				}elseif($v['type'] === 'last'){
+					$v1 = (empty($v['text'])?'':$v['text']);
+					$v2 = (empty($v['attr'])?'':$v['attr']);
+					
+					$tmp .= str_replace(array('%1','%2'),array($v1, $v2),$last);
+				}else{
+					continue;
+				}
+				if(!empty($data)){
+					$tmp .= $separator;
+				}
+			}
+			return $this->escape_explode($tmp);
+		}
+		//Abwaerzkompatibilitaet
+		return '<span id="icHmenu">' . $this->escape_explode($data) . '</span>';
+	}
 }
