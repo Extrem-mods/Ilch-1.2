@@ -479,20 +479,20 @@ class design extends tpl {
 	* Baut das die Brotkruemelnavigation zusammen
 	*
 	* @param array $data Ein Arry, welches die zu verarbeitenden Daten enthält. Aus Gründen der Abwärtskompatibilität kein Type Hinting. Wenn alle Templates umgestellt sind kann das noch eingeführt werden
-	* @param tpl $tpl Die Tpl Klasse für die index.htm. Wird für die deffinition spezieller Atribute benötigt
+	* @param tpl $tpl Die Tpl-Klasse für die index.htm. Wird für die deffinition spezieller Atribute benötigt
 	* @return string Brotkrumennavigation
 	*/
-	protected function buildBreadcrumb($data, tpl $tpl){
-		$tmp = '';
-		
-		if($tpl->list_exists('hseparator')) $separator = $tpl->list_get('hseparator', array());
-		else $separator = '&raquo;';
-		if($tpl->list_exists('hlink')) $link = $tpl->list_get('hlink', array());
-		else $link = '<a href="%3" title="%4" %2>%1</a>';
-		if($tpl->list_exists('hlast')) $last = $tpl->list_get('hlast', array());
-		else $last = '<span %2>%1</span>';		
-		
+	protected function buildBreadcrumb($data, tpl $tpl){	
 		if(is_array($data)){
+			$tmp = '';
+		
+			if($tpl->list_exists('hseparator')) $separator = $tpl->list_get('hseparator', array());
+			else $separator = '&raquo;';
+			if($tpl->list_exists('hlink')) $link = $tpl->list_get('hlink', array());
+			else $link = '<a href="%3" %2>%1</a>';
+			if($tpl->list_exists('hlast')) $last = $tpl->list_get('hlast', array());
+			else $last = '<span %2>%1</span>';	
+			
 			while($v = array_shift($data)){
 				if($v['type'] === 'link'){
 					$v1 = (empty($v['text'])?'':$v['text']);
