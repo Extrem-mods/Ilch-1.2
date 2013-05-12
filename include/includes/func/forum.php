@@ -198,7 +198,10 @@ function forum_user_is_mod($fid) {
 
 function check_forum_failure($ar) {
     if (array_key_exists(0, $ar)) {
-        $hmenu = '<a class="smalfont" href="?forum">Forum</a><b> &raquo; </b> Fehler aufgetreten';
+			$hmenu = array(
+			array('type'=>'link', 'href'=>'forum', 'text'=>'Forum'),
+			'Fehler'
+		);
         $title = 'Forum : Fehler aufgetreten';
         $design = new design($title, $hmenu);
         $design->header();

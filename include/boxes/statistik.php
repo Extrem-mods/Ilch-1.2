@@ -20,7 +20,7 @@ if (empty($_GET[ 'sum' ])) {
     echo '<a class="box" href="index.php?statistik"><b>... ' . $lang[ 'more' ] . '</b></a>';
 } else {
     $title = $allgAr[ 'title' ] . ' :: Statistik';
-    $hmenu = 'Statistik';
+    $hmenu = array('Statistik');
     $design = new design($title, $hmenu, 0);
     $design->header();
 

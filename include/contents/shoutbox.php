@@ -40,7 +40,7 @@ if (is_siteadmin()) {
 
 
 $title = $allgAr[ 'title' ] . ' :: Shoutbox ' . $lang[ 'archiv' ];
-$hmenu = 'Shoutbox ' . $lang[ 'archiv' ];
+$hmenu = array('Shoutbox ' . $lang[ 'archiv' ]);
 $design = new design($title, $hmenu);
 $design->header();
 

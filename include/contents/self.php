@@ -90,7 +90,7 @@ if ($ok != true) {
     // und dann noch ganz am ende der self_ datei $design->footer();
     // allers natuerlich in den php bereich der seite.
     $title = $allgAr[ 'title' ];
-    $hmenu = "";
+    $hmenu = array(' ');
     $design = new design($title, $hmenu);
     $design->header();
     // ENDE DESIGN

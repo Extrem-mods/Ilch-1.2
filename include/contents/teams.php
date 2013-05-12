@@ -59,7 +59,10 @@ if ($menu->get(1) == 'show') {
         $name = @db_result(db_query("SELECT `name` FROM `prefix_groups` WHERE `id` = " . $gid));
         $bild = @db_result(db_query("SELECT `img` FROM `prefix_groups` WHERE `id` = " . $gid));
         $title = $allgAr[ 'title' ] . ' :: Teams :: ' . $name;
-        $hmenu = '<a class="smalfont" href="?teams">Teams</a> &raquo; ' . $name;
+		$hmenu = array(
+			array('type'=>'link', 'href'=>'teams', 'text'=>'Teams'),
+			$name
+		);
         $design = new design($title, $hmenu);
         $design->header();
         $tpl = new tpl('teams');
@@ -72,7 +75,9 @@ if ($menu->get(1) == 'show') {
         show_members($gid, $tpl);
     } else { // more groups to show
         $title = $allgAr[ 'title' ] . ' :: Teams :: ';
-        $hmenu = '<a class="smalfont" href="?teams">Teams</a>';
+		$hmenu = array(
+			array('type'=>'link', 'href'=>'teams', 'text'=>'Teams')
+		);
         $design = new design($title, $hmenu);
         $design->header();
         $tpl = new tpl('teams');
@@ -94,7 +99,7 @@ if ($menu->get(1) == 'show') {
     }
 } else {
     $title = $allgAr[ 'title' ] . ' :: Teams';
-    $hmenu = 'Teams';
+    $hmenu = array('Teams');
     $design = new design($title, $hmenu);
     $design->header();
     $tpl = new tpl('teams');
