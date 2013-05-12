@@ -478,8 +478,8 @@ class design extends tpl {
 	/**
 	* Baut das die Brotkruemelnavigation zusammen
 	*
-	* @param array $data Ein Arry, welches die zu verarbeitenden Daten enthält. Aus Gründen der Abwärtskompatibilität kein Type Hinting. Wenn alle Templates umgestellt sind kann das noch eingeführt werden
-	* @param tpl $tpl Die Tpl-Klasse für die index.htm. Wird für die deffinition spezieller Atribute benötigt
+	* @param array $data Ein Arry, welches die zu verarbeitenden Daten enthält. Aus Gründen der Abwärtskompatibilität zu Versionen, wo die Brotkruemelnavigation als String übergeben wird, kein Type Hinting. Wenn alle Templates umgestellt sind kann das noch eingeführt werden
+	* @param tpl $tpl Die Tpl-Klasse für die index.htm. Wird zum Abfragen der Gerstaltung benötigt
 	* @return string Brotkrumennavigation
 	*/
 	protected function buildBreadcrumb($data, tpl $tpl){
@@ -498,14 +498,14 @@ class design extends tpl {
 
 				switch(strtolower($v['type'])){
 				case 'link':
-					$v1 = (empty($v['text'])?'':$v['text']);
+					$v1 = (empty($v['text'])?'':htmlentities($v['text']));
 					$v2 = (empty($v['attr'])?'':$v['attr']);
-					$v3 = (empty($v['href'])?'':$v['href']);
+					$v3 = (empty($v['href'])?'':rawurlencode($v['href']));
 
 					$tmp .= str_replace(array('%1', '%2', '%3'), array($v1, $v2, $v3), $link);
 					break;
 				case 'last':
-					$v1 = (empty($v['text'])?'':$v['text']);
+					$v1 = (empty($v['text'])?'':htmlentities($v['text']));
 					$v2 = (empty($v['attr'])?'':$v['attr']);
 
 					$tmp .= str_replace(array('%1','%2'),array($v1, $v2),$last);

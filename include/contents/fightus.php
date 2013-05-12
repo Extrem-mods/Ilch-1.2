@@ -7,7 +7,7 @@
 defined('main') or die('no direct access');
 
 $title = $allgAr[ 'title' ] . ' :: Fightus';
-$hmenu = 'Fightus';
+$hmenu = array('Fightus');
 $header = Array(
 	'jquery/jquery.validate.js',
 	'forms/fightus.js'
@@ -50,11 +50,11 @@ foreach ($far as $v) {
     }
 }
 if (isset($_POST['submit']))
-{ 
-	if (chk_antispam('fightus') != true) 
+{
+	if (chk_antispam('fightus') != true)
 	{$fehler .= '&middot;&nbsp;'.$lang[ 'incorrectspam' ].'<br/>'; $fightusspam = false;} else { $fightusspam = true; }
 }
-	
+
 if (count($far) == $x AND $fightusspam == true) {
     $squad = escape($squad, 'integer');
     $abf = "SELECT `mod1`,`mod2`, `mod3`,`name` FROM `prefix_groups` WHERE `id` = " . $squad;

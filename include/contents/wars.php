@@ -187,7 +187,10 @@ if ($menu->get(2) == '' OR $menu->getA(2) == 'p') {
     if ($row['status'] == 2) {
         // nextwars
         $title = $allgAr['title'] . ' :: Wars :: Nextwars';
-        $hmenu = '<a href="?wars" class="smalfont">Wars</a><b> &raquo; </b>Nextwars';
+		$hmenu = array(
+			array('type'=>'link', 'href'=>'wars', 'text'=>'Wars'),
+			'Nextwars'
+		);
         $design = new design ($title , $hmenu);
         $design->header();
         $tpl = new tpl ('wars_next');
@@ -271,7 +274,10 @@ if ($menu->get(2) == '' OR $menu->getA(2) == 'p') {
         $row['ergliste'] = get_erg_liste($_GET['mehr']);
         $row['wlp'] = $wlpar[$row['wlp']];
         $title = $allgAr['title'] . ' :: Wars :: Lastwars';
-        $hmenu = '<a href="?wars" class="smalfont">Wars</a><b> &raquo; </b>Lastwars';
+		$hmenu = array(
+			array('type'=>'link', 'href'=>'wars', 'text'=>'Wars'),
+			'Lastwars'
+		);
         $design = new design ($title , $hmenu);
 		$header = Array('jquery/jquery.validate.js','forms/wars_last.js');
     	$design->header($header);
@@ -282,7 +288,7 @@ if ($menu->get(2) == '' OR $menu->getA(2) == 'p') {
         if ($allgAr['wars_last_komms'] < 0 AND has_right ($allgAr['wars_last_komms'])) {
             // aktion
             if (isset ($_POST['kommentar_fuer_last_wars'])) {
-            	if (loggedin()) { $name = $_SESSION['authname']; $userid = $_SESSION['authid']; } 
+            	if (loggedin()) { $name = $_SESSION['authname']; $userid = $_SESSION['authid']; }
 				else { $name = escape($_POST['name'], 'string').' (Gast)'; $userid = 0; }
                 $text = escape($_POST[ 'text' ], 'string');
                 db_query("INSERT INTO prefix_koms (name,userid,cat,time,text,uid) VALUES ('" . $name . "'," . $userid . ",'WARSLAST','" . time() . "','" . $text . "', " . $_GET['mehr'] . " )");
