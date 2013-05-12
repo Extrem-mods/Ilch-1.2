@@ -485,7 +485,7 @@ class design extends tpl {
 	*/
 	protected function buildBreadcrumb($data, tpl $tpl){
 		if(is_array($data)){
-			$tmp = '';
+			$breadcrumb = '';
 
 			if($tpl->list_exists('hseparator')) $separator = $tpl->list_get('hseparator', array());
 			else $separator = '&raquo;';
@@ -494,7 +494,13 @@ class design extends tpl {
 			if($tpl->list_exists('hlast')) $last = $tpl->list_get('hlast', array());
 			else $last = '<span %2>%1</span>';
 
-			while(null !== $v = array_shift($data)){
+			foreach($data as $v){
+				if(empty($v)) continue;
+				
+				if(!empty($breadcrumb)){
+					$breadcrumb .= $separator;
+				}
+				
 				if(is_string($v)) $v = array('type'=>'last', 'text'=>$v);
 
 				switch(strtolower($v['type'])){
@@ -503,22 +509,19 @@ class design extends tpl {
 					$v2 = (empty($v['attr'])?'':$v['attr']);
 					$v3 = (empty($v['href'])?'':rawurlencode($v['href']));
 
-					$tmp .= str_replace(array('%1', '%2', '%3'), array($v1, $v2, $v3), $link);
+					$breadcrumb .= str_replace(array('%1', '%2', '%3'), array($v1, $v2, $v3), $link);
 					break;
 				case 'last':
 					$v1 = (empty($v['text'])?'':htmlentities($v['text']));
 					$v2 = (empty($v['attr'])?'':$v['attr']);
 
-					$tmp .= str_replace(array('%1','%2'),array($v1, $v2),$last);
+					$breadcrumb .= str_replace(array('%1','%2'),array($v1, $v2),$last);
 					break;
 				default:
 					continue 2;
-				}
-				if(!empty($data)){
-					$tmp .= $separator;
-				}
+				}				
 			}
-			return $this->escape_explode($tmp);
+			return $this->escape_explode($breadcrumb);
 		}
 		//Abwaerzkompatibilitaet
 		return '<span id="icHmenu">' . $this->escape_explode($data) . '</span>';
