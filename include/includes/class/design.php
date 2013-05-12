@@ -523,4 +523,29 @@ class design extends tpl {
 		//Abwaerzkompatibilitaet
 		return '<span id="icHmenu">' . $this->escape_explode($data) . '</span>';
 	}
+	
+	/**
+	* Baut ein Array zusammen, welches für buildBreadcrumb verwendet werden kann.
+	*
+	* Diese Funktion dient als Wrapper, um auch einfache Arrays für die Brotkruemelnavigation zu verwenden
+	* Input Shema für zwei Einträge mit Link und ein EIntrag ohne Link: 
+	* array([url1]=>[text1], [url2]=>[text2], [text3])
+	* Output: 
+	* array(array('type'=>'link', 'text'=>[text1], 'href'=>[url1]), array('type'=>'link', 'text'=>[text2], 'href'=>[url2]),
+array('type'=>'last', 'text'=>[text3]))
+	* @param array $data Ein Arry, welches die zu verarbeitenden Daten enthält.
+	* @return array für die Verwendung in buildBreadcrumb()
+	* @autor finke <surf-finke@gmx.de>
+	*/
+	public static function breadcrumbFromSimple(array $data){
+		$result = array();
+		foreach($data as $k=>$v){
+			if(!empty($k) && is_string($k)){
+				$result[] = array('type'=>'link', 'text'=>$v, 'href'=>$k);
+			}else{
+				$result[] = array('type'=>'last', 'text'=>$v);
+			}
+		}
+		return $result;
+	}
 }
