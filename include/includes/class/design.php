@@ -494,7 +494,7 @@ class design extends tpl {
 			if($tpl->list_exists('hlast')) $last = $tpl->list_get('hlast', array());
 			else $last = '<span %2>%1</span>';
 
-			while($v = array_shift($data)){
+			while(null !== $v = array_shift($data)){
 				if(is_string($v)) $v = array('type'=>'last', 'text'=>$v);
 
 				switch(strtolower($v['type'])){
@@ -533,6 +533,7 @@ class design extends tpl {
 	* Output: 
 	* array(array('type'=>'link', 'text'=>[text1], 'href'=>[url1]), array('type'=>'link', 'text'=>[text2], 'href'=>[url2]),
 array('type'=>'last', 'text'=>[text3]))
+	*
 	* @param array $data Ein Arry, welches die zu verarbeitenden Daten enthält.
 	* @return array für die Verwendung in buildBreadcrumb()
 	* @autor finke <surf-finke@gmx.de>
