@@ -66,7 +66,7 @@ class design extends tpl {
 
             $ar = array(
                 'TITLE' => $this->escape_explode($title),
-                'HMENU' => $this->buildBreadcrumbe($hmenu, $tpl),
+                'HMENU' => $this->buildBreadcrumb($hmenu, $tpl),
                 'SITENAME' => $this->escape_explode($allgAr[ 'title' ]),
                 'hmenuende' => '',
                 'vmenuende' => '',
