@@ -505,17 +505,19 @@ class design extends tpl {
             } else {
                 $last = '<span %2>%1</span>';
             }
-            
+
             foreach($data as $v){
                 if(empty($v)) {
                     continue;
                 }
-                
+
                 if(!empty($breadcrumb)){
                     $breadcrumb .= $separator;
                 }
-                
-                if(is_string($v)) $v = array('type'=>'last', 'text'=>$v);
+
+                if(is_string($v)) {
+                    $v = array('type'=>'last', 'text'=>$v);
+                }
 
                 switch(strtolower($v['type'])){
                 case 'link':
@@ -533,21 +535,21 @@ class design extends tpl {
                     break;
                 default:
                     continue 2;
-                }               
+                }
             }
             return $this->escape_explode($breadcrumb);
         }
         //Abwaerzkompatibilitaet
         return $this->escape_explode($data);
     }
-    
+
     /**
     * Baut ein Array zusammen, welches für buildBreadcrumb verwendet werden kann.
     *
     * Diese Funktion dient als Wrapper, um auch einfache Arrays für die Brotkruemelnavigation zu verwenden
-    * Input Shema für zwei Einträge mit Link und ein EIntrag ohne Link: 
+    * Input Shema für zwei Einträge mit Link und ein EIntrag ohne Link:
     * array([url1]=>[text1], [url2]=>[text2], [text3])
-    * Output: 
+    * Output:
     * array(array('type'=>'link', 'text'=>[text1], 'href'=>[url1]), array('type'=>'link', 'text'=>[text2], 'href'=>[url2]),
 array('type'=>'last', 'text'=>[text3]))
     *
@@ -558,9 +560,9 @@ array('type'=>'last', 'text'=>[text3]))
     public static function breadcrumbFromSimple(array $data){
         $result = array();
         foreach($data as $k=>$v){
-            if(!empty($k) && is_string($k)){
+            if(!empty($k) && is_string($k)) {
                 $result[] = array('type'=>'link', 'text'=>$v, 'href'=>$k);
-            }else{
+            } else {
                 $result[] = array('type'=>'last', 'text'=>$v);
             }
         }
