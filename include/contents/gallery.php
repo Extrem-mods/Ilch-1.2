@@ -142,7 +142,7 @@ if ($menu->get(1) == 'showOrig') {
     if ($komsOK) {
         // eintragen
         if ((loggedin() or isset($_POST['name'])) and !empty($_POST['text']) and $antispam = chk_antispam('gallery')) {
-            if (loggedin()) { $name = $_SESSION['authname']; $userid = $_SESSION['authid']; } 
+            if (loggedin()) { $name = $_SESSION['authname']; $userid = $_SESSION['authid']; }
 			else { $name = escape($_POST['name'], 'string').' (Gast)'; $userid = 0; }
             $text = escape($_POST['text'], 'string');
             db_query("INSERT INTO prefix_koms (`name`,`userid`,`text`,`time`,`uid`,`cat`) VALUES ('" . $name . "'," . $userid . ",'" . $text . "','" . time() . "'," . $row['id'] . ",'GALLERYIMG')");
@@ -155,10 +155,10 @@ if ($menu->get(1) == 'showOrig') {
         if (!empty($insertmsg)) {
             $insertmsg = '<span style="color:red;">' . $insertmsg . '</span><br />';
         }
-		if (loggedin()) { 
-			$uname = $_SESSION[ 'authname' ]; $readonly = 'readonly'; 
-		} else { 
-			$uname = ''; $readonly = ''; 
+		if (loggedin()) {
+			$uname = $_SESSION[ 'authname' ]; $readonly = 'readonly';
+		} else {
+			$uname = ''; $readonly = '';
 		}
 
         $tpl->set('insertmsg', $insertmsg);
@@ -202,7 +202,10 @@ if ($menu->get(1) == 'showOrig') {
         $catname = '';
     }
     $title = $allgAr[ 'title' ] . ' :: Gallery ' . $cattitle;
-    $hmenu = '<a class="smalfont" href="?gallery">Gallery</a>' . $catname;
+	$hmenu = array(
+		array('type'=>'link', 'href'=>'gallery', 'text'=>'Gallery'),
+		$catname
+	);
     $design = new design($title, $hmenu);
     $design->header();
     $tpl = new tpl('gallery');

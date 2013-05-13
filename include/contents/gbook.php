@@ -8,7 +8,7 @@
 defined('main') or die('no direct access');
 
 $title = $allgAr['title'] . ' :: G&auml;stebuch';
-$hmenu = 'G&auml;stebuch';
+$hmenu = array('G&auml;stebuch');
 $header = array(
     'jquery/jquery.validate.js',
     'forms/gbook.js'

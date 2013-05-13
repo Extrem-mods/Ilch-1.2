@@ -7,7 +7,7 @@
 defined('main') or die('no direct access');
 
 $title = $allgAr[ 'title' ] . ' :: User Control Panel';
-$hmenu = 'User Control Panel';
+$hmenu = array('User Control Panel');
 $design = new design($title, $hmenu);
 $design->header();
 

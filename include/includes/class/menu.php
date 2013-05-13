@@ -202,7 +202,7 @@ class menu {
 
         if ($exit) {
             $title = $allgAr[ 'title' ] . ' :: Keine Berechtigung';
-            $hmenu = 'Keine Berechtigung';
+            $hmenu = array('Keine Berechtigung');
             $design = new design($title, $hmenu);
 
             if (loggedin()) {

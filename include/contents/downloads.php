@@ -179,7 +179,10 @@ switch ($menu->get(1)) {
             $catname = '';
         }
         $title = $allgAr[ 'title' ] . ' :: Downloads ' . $cattitle;
-        $hmenu = '<a class="smalfont" href="?downloads">Downloads</a>' . $catname;
+        $hmenu = array(
+			array('type'=>'link', 'href'=>'downloads', 'text'=>'Downloads'),
+			$catname
+		);
         $design = new design($title, $hmenu);
 		$load = Array(
 		'jquery/jquery.validate.js',
@@ -260,7 +263,7 @@ switch ($menu->get(1)) {
         $erg = db_query("SELECT `prefix_downloads`.`cat`,`ssurl`,`surl`,`url`,`hits`,`vote_klicks`,`vote_wertung`,`prefix_downloads`.`name`,`version`,`creater`,`downs`,`descl`,`drecht`,`prefix_downloads`.`id`,DATE_FORMAT(time,'%d.%m.%Y') as `datum` FROM `prefix_downloads` LEFT JOIN `prefix_downcats` ON `prefix_downcats`.`id` = `prefix_downloads`.`cat` WHERE `prefix_downloads`.`id` = " . $fid . " AND (" . $_SESSION[ 'authright' ] . " <= `prefix_downcats`.`recht` OR (`prefix_downloads`.`cat` = 0 AND `prefix_downcats`.`recht` IS NULL))");
         if (@db_num_rows($erg) != 1) {
             $title = $allgAr[ 'title' ] . ' :: Downloads ';
-            $hmenu = '<a class="smalfont" href="?downloads">Downloads</a>';
+			$hmenu = array(array('type'=>'link', 'href'=>'downloads', 'text'=>'Downloads'));
             $design = new design($title, $hmenu);
             $design->header();
             echo 'Der Download wurde nicht gefunden';
@@ -299,12 +302,12 @@ switch ($menu->get(1)) {
             $catname = '';
         }
         $tpl = new tpl('downloads_show');
-		$drecht = $row['drecht'];    
+		$drecht = $row['drecht'];
 		if ( $_SESSION['authright'] <= $drecht ) {
 				$_SESSION['download'][$row['id']] = $row['id'];
 				$row['downlink'] = '<a href="index.php?downloads-down-'.$row['id'].'">'.$lang['download'].'</a>';
 		} else {
-				$row['downlink'] = '<a href="index.php?downloads-error">'.$lang['download'].'</a>'; 
+				$row['downlink'] = '<a href="index.php?downloads-error">'.$lang['download'].'</a>';
 		}
         $row[ 'ssurl' ] = ($row[ 'ssurl' ] != '' ? '<img src="' . $row[ 'ssurl' ] . '" alt="' . $row[ 'name' ] . ' ' . $row[ 'version' ] . '" title="' . $row[ 'name' ] . ' ' . $row[ 'version' ] . '" style="float:left; border: none; padding-right:5px;" />' : '');
         $row[ 'surl' ] = (empty($row[ 'surl' ]) ? '' : '&nbsp;&nbsp;&nbsp; <a href="' . $row[ 'surl' ] . '" target="_blank">Demo/Screenshot</a>');
@@ -312,7 +315,10 @@ switch ($menu->get(1)) {
         $row[ 'descl' ] = bbcode($row[ 'descl' ]);
         $row[ 'version_kl' ] = (empty($row[ 'version' ]) ? '' : '(' . $row[ 'version' ] . ')');
         $title = $allgAr[ 'title' ] . ' :: Downloads ' . $cattitle;
-        $hmenu = '<a class="smalfont" href="?downloads">Downloads</a>' . $catname;
+		$hmenu = array(
+			array('type'=>'link', 'href'=>'downloads', 'text'=>'Downloads'),
+			$catname
+		);
         $design = new design($title, $hmenu);
 				$header = Array('jquery/jquery.validate.js', 'forms/downloads.js');
         $design->header($header);
@@ -321,7 +327,7 @@ switch ($menu->get(1)) {
 		if ($komsOK) {
             $id = escape($menu->get(2), 'integer');
             if (chk_antispam('downloads') AND isset($_POST[ 'name' ]) AND isset($_POST[ 'text' ])) {
-            	if (loggedin()) { $name = $_SESSION['authname']; $userid = $_SESSION['authid']; } 
+            	if (loggedin()) { $name = $_SESSION['authname']; $userid = $_SESSION['authid']; }
 				else { $name = escape($_POST['name'], 'string').' (Gast)'; $userid = 0; }
                 $text = escape($_POST[ 'text' ], 'string');
                 db_query("INSERT INTO `prefix_koms` (`name`,`userid`,`text`,`time`,`uid`,`cat`) VALUES ('" . $name . "', " . $userid . ", '" . $text . "','" . time() . "', " . $id . ", 'DOWNLOAD')");
@@ -330,7 +336,7 @@ switch ($menu->get(1)) {
                 $did = escape($menu->getE(3), 'integer');
                 db_query("DELETE FROM `prefix_koms` WHERE `uid` = " . $id . " AND `cat` = 'DOWNLOAD' AND `id` = " . $did);
             }
-			
+
 			$r[ 'ANTISPAM' ] = get_antispam('downloads', 0);
 			if (loggedin()) { $r[ 'uname' ] = $_SESSION[ 'authname' ]; $r[ 'readonly' ] = 'readonly'; } else { $r[ 'uname' ] = ''; $r[ 'readonly' ] = ''; }
             $r[ 'text' ] = bbcode($r[ 'text' ]);
@@ -352,11 +358,11 @@ switch ($menu->get(1)) {
         $design->footer();
         break;
     case 'down':
-	    	$fid = intval($menu->get(2));   
-        $erg = db_query("SELECT `drecht` FROM `prefix_downloads` LEFT JOIN `prefix_downcats` ON `prefix_downcats`.`id` = `prefix_downloads`.`cat` WHERE `prefix_downloads`.`id` = ".$fid." AND (".$_SESSION['authright']." <= `prefix_downloads`.`drecht` OR (`prefix_downloads`.`cat` = 0 AND `prefix_downcats`.`recht` = 0))");    
+	    	$fid = intval($menu->get(2));
+        $erg = db_query("SELECT `drecht` FROM `prefix_downloads` LEFT JOIN `prefix_downcats` ON `prefix_downcats`.`id` = `prefix_downloads`.`cat` WHERE `prefix_downloads`.`id` = ".$fid." AND (".$_SESSION['authright']." <= `prefix_downloads`.`drecht` OR (`prefix_downloads`.`cat` = 0 AND `prefix_downcats`.`recht` = 0))");
         if (@db_num_rows($erg) != 1) {
         $title = $allgAr['title'].' :: Downloads ';
-        $hmenu = '<a class="smalfont" href="?downloads">Downloads</a>';
+        $hmenu = array(array('type'=>'link', 'href'=>'downloads', 'text'=>'Downloads'));
         $design = new design ( $title , $hmenu );
         $design->header();
         echo $lang['nopermission'];
@@ -369,7 +375,7 @@ switch ($menu->get(1)) {
         $qry = db_query("SELECT d.`url`, IFNULL(c.`recht`,0) AS recht FROM `prefix_downloads` d LEFT JOIN `prefix_downcats` c ON c.`id` = d.`cat` WHERE d.`id` = $fid");
         $row = db_fetch_assoc($qry);
         $url = 'http://' . $_SERVER[ "HTTP_HOST" ] . dirname($_SERVER[ "SCRIPT_NAME" ]) . '/index.php?downloads';
-        if ($qry !== false and has_right($row[ 'recht' ])) {						
+        if ($qry !== false and has_right($row[ 'recht' ])) {
             db_query("UPDATE prefix_downloads SET downs = downs +1 WHERE id = " . $fid);
             if (file_exists($row[ 'url' ])) {
       				header('Content-type: application/octet-stream');
@@ -387,7 +393,10 @@ switch ($menu->get(1)) {
     case 'upload':
         if ($allgAr[ 'archiv_down_userupload' ] == 1 AND loggedin() AND is_writeable('include/downs/downloads/user_upload')) {
             $title = $allgAr[ 'title' ] . ' :: Downloads :: User - Upload';
-            $hmenu = '<a class="smalfont" href="?downloads">Downloads</a><b> &raquo; </b>User - Upload';
+			$hmenu = array(
+				array('type'=>'link', 'href'=>'downloads', 'text'=>'Downloads'),
+				'User - Upload'
+			);
             $design = new design($title, $hmenu);
             $design->header();
 
@@ -402,10 +411,13 @@ switch ($menu->get(1)) {
             $design->footer();
         }
         break;
-        
+
 	case 'error':
       $title = $allgAr['title'].' :: Downloads Error';
-      $hmenu = '<a class="smalfont" href="?downloads">Downloads Error</a>';
+		$hmenu = array(
+			array('type'=>'link', 'href'=>'downloads', 'text'=>'Downloads'),
+			'Error'
+		);
       $design = new design ( $title , $hmenu );
       $design->header();
       echo '<table width="100%" class="border" border="0" cellspacing="2" cellpadding="3" align="center">
@@ -414,4 +426,4 @@ switch ($menu->get(1)) {
       $design->footer();
       break;
 
-} 
+}

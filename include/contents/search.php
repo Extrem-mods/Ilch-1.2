@@ -73,7 +73,10 @@ if ($such == 'augt' OR $such == 'aeit' OR $such == 'aubt') {
 }
 
 $title = $allgAr[ 'title' ] . ' :: Suchen :: ' . $snac;
-$hmenu = '<a class="smalfont" href="index.php?search">Suchen</a><b> &raquo; </b>' . $snac;
+$hmenu = array(
+	array('type'=>'link', 'href'=>'search', 'text'=>'Suchen'),
+	$snac
+);
 $design = new design($title, $hmenu);
 $design->header();
 

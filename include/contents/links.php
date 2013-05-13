@@ -75,7 +75,10 @@ switch ($menu->getA(1)) {
             $catname2 = '';
         }
         $title = $allgAr[ 'title' ] . ' :: links ' . $cattitle;
-        $hmenu = '<a class="smalfont" href="?links">Links</a>' . $catname;
+		$hmenu = array(
+			array('type'=>'link', 'href'=>'links', 'text'=>'Links'),
+			$catname
+		);
         $design = new design($title, $hmenu);
         $design->header();
         $tpl = new tpl('links');

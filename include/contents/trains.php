@@ -7,7 +7,7 @@
 defined('main') or die('no direct access');
 
 $title = $allgAr[ 'title' ] . ' :: Trainingszeiten';
-$hmenu = 'Trainingszeiten';
+$hmenu = array('Trainingszeiten');
 $design = new design($title, $hmenu);
 $design->header();
 $tpl = new tpl('trains');

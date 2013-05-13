@@ -7,7 +7,7 @@
 defined('main') or die('no direct access');
 
 $title = $allgAr[ 'title' ] . ' :: Kontakt';
-$hmenu = 'Kontakt';
+$hmenu = array('Kontakt');
 $header = Array(
 	'jquery/jquery.validate.js',
 	'forms/contact.js'

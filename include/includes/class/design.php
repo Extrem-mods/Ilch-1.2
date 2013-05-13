@@ -66,7 +66,7 @@ class design extends tpl {
 
             $ar = array(
                 'TITLE' => $this->escape_explode($title),
-                'HMENU' => '<span id="icHmenu">' . $this->escape_explode($hmenu) . '</span>',
+                'HMENU' => $this->buildBreadcrumb($hmenu, $tpl),
                 'SITENAME' => $this->escape_explode($allgAr[ 'title' ]),
                 'hmenuende' => '',
                 'vmenuende' => '',
@@ -74,6 +74,9 @@ class design extends tpl {
                 'vmenubegi' => '',
                 'hmenupoint' => '',
                 'vmenupoint' => '',
+                'hseparator' => '',
+                'hlink' => '',
+                'hlast' => '',
                 'DESIGN' => $this->design
                 );
             $tpl->set_ar($ar);
@@ -103,8 +106,8 @@ class design extends tpl {
         $this->addheader($ILCH_HEADER_ADDITIONS);
         if (isset($this->html[0]) and !$this->ajax) {
             $this->html[0] = str_replace('</head>', $this->load_addons($addons) . $this->headerAdds . "\n
-			<link rel=\"stylesheet\" type=\"text/css\" href=\"include/includes/css/jquery/templates/".$allgAr['jqueryui']."/jquery-ui.css\" />\n
-			</head>", $this->html[ 0 ]);
+            <link rel=\"stylesheet\" type=\"text/css\" href=\"include/includes/css/jquery/templates/".$allgAr['jqueryui']."/jquery-ui.css\" />\n
+            </head>", $this->html[ 0 ]);
             echo $this->html[0] . '<div id="icContent">';
             unset($this->html[0]);
         } else {
@@ -171,7 +174,7 @@ class design extends tpl {
             $this->json['headerAdds'] = $this->headerAdds;
             $this->json['bodyendAdds'] = $this->bodyendAdds;
             $cntnt = ob_get_clean();
-			$this->json['content'] = str_replace('_jqueryuitheme_', '/'.$allgAr['jqueryui'].'/', $cntnt);
+            $this->json['content'] = str_replace('_jqueryuitheme_', '/'.$allgAr['jqueryui'].'/', $cntnt);
             if (isset($allgAr['modrewrite']) and $allgAr['modrewrite'] == 1) {
                 $this->json['content'] = self::rewriteLinks( $this->json['content'] );
             }
@@ -182,8 +185,8 @@ class design extends tpl {
         echo '</div>' . $this->html[1];
         unset($this->html[1]);
         if (isset($allgAr['modrewrite']) and $allgAr['modrewrite'] == 1) {
-			$cntnt = ob_get_clean();
-			$cntnt = str_replace('_jqueryuitheme_', '/'.$allgAr['jqueryui'].'/', $cntnt);
+            $cntnt = ob_get_clean();
+            $cntnt = str_replace('_jqueryuitheme_', '/'.$allgAr['jqueryui'].'/', $cntnt);
             echo self::rewriteLinks( $cntnt) ;
         }
         if ($exit == 1) {
@@ -305,7 +308,7 @@ class design extends tpl {
         }
     }
     // ####
-    protected function get_boxes($wo, $tpl) {
+    protected function get_boxes($wo, tpl $tpl) {
         global $lang, $allgAr, $menu;
         if (is_numeric($wo)) {
             $datei = 'menunr' . $wo;
@@ -473,5 +476,96 @@ class design extends tpl {
         $buffer = $this->escape_explode(ob_get_contents());
         ob_end_clean();
         return ($buffer);
+    }
+
+    /**
+    * Baut das die Brotkruemelnavigation zusammen
+    *
+    * @param array $data Ein Arry, welches die zu verarbeitenden Daten enthält. Aus Gründen der Abwärtskompatibilität zu Versionen, wo die Brotkruemelnavigation als String übergeben wird, kein Type Hinting. Wenn alle Templates umgestellt sind kann das noch eingeführt werden
+    * @param tpl $tpl Die Tpl-Klasse für die index.htm. Wird zum Abfragen der Gerstaltung benötigt
+    * @return string Brotkrumennavigation
+    * @autor finke <surf-finke@gmx.de>
+    */
+    protected function buildBreadcrumb($data, tpl $tpl){
+        if(is_array($data)){
+            $breadcrumb = '';
+
+            if($tpl->list_exists('hseparator')) {
+                $separator = $tpl->list_get('hseparator', array());
+            } else {
+                $separator = '&raquo;';
+            }
+            if($tpl->list_exists('hlink')) {
+                $link = $tpl->list_get('hlink', array());
+            } else {
+                $link = '<a href="index.php?%3" %2>%1</a>';
+            }
+            if($tpl->list_exists('hlast')) {
+                $last = $tpl->list_get('hlast', array());
+            } else {
+                $last = '<span %2>%1</span>';
+            }
+
+            foreach($data as $v){
+                if(empty($v)) {
+                    continue;
+                }
+
+                if(!empty($breadcrumb)){
+                    $breadcrumb .= $separator;
+                }
+
+                if(is_string($v)) {
+                    $v = array('type'=>'last', 'text'=>$v);
+                }
+
+                switch(strtolower($v['type'])){
+                case 'link':
+                    $v1 = (empty($v['text'])?'':htmlentities($v['text']));
+                    $v2 = (empty($v['attr'])?'':$v['attr']);
+                    $v3 = (empty($v['href'])?'':rawurlencode($v['href']));
+
+                    $breadcrumb .= str_replace(array('%1', '%2', '%3'), array($v1, $v2, $v3), $link);
+                    break;
+                case 'last':
+                    $v1 = (empty($v['text'])?'':htmlentities($v['text']));
+                    $v2 = (empty($v['attr'])?'':$v['attr']);
+
+                    $breadcrumb .= str_replace(array('%1','%2'),array($v1, $v2),$last);
+                    break;
+                default:
+                    continue 2;
+                }
+            }
+            return $this->escape_explode($breadcrumb);
+        }
+        //Abwaerzkompatibilitaet
+        return $this->escape_explode($data);
+    }
+
+    /**
+    * Baut ein Array zusammen, welches für buildBreadcrumb verwendet werden kann.
+    *
+    * Diese Funktion dient als Wrapper, um auch einfache Arrays für die Brotkruemelnavigation zu verwenden
+    * Input Shema für zwei Einträge mit Link und ein EIntrag ohne Link:
+    * array([url1]=>[text1], [url2]=>[text2], [text3])
+    * Output:
+    * array(array('type'=>'link', 'text'=>[text1], 'href'=>[url1]), array('type'=>'link', 'text'=>[text2], 'href'=>[url2]),
+array('type'=>'last', 'text'=>[text3]))
+    *
+    * @param array $data Ein Arry, welches die zu verarbeitenden Daten enthält.
+    * @return array für die Verwendung in buildBreadcrumb()
+    * @autor finke <surf-finke@gmx.de>
+    */
+    public static function breadcrumbFromSimple(array $data){
+        $result = array();
+        foreach($data as $k=>$v){
+            if(!empty($k) && is_string($k)) {
+                $result[] = array('type'=>'link', 'text'=>$v, 'href'=>$k);
+            } else {
+                $result[] = array('type'=>'last', 'text'=>$v);
+            }
+        }
+        return $result;
     }
 }

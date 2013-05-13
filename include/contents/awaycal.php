@@ -30,7 +30,7 @@ function away_sendpmtoleaders($m, $uid, $a) {
 }
 
 $title = $allgAr[ 'title' ] . ' :: Awaycalender';
-$hmenu = 'Awaycalender';
+$hmenu = array('Awaycalender');
 $design = new design($title, $hmenu);
 $header = Array(
 	'jquery/jquery.validate.js',
