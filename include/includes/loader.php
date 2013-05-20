@@ -11,7 +11,7 @@ require_once('include/includes/func/debug.php');
 require_once('include/includes/func/db/mysql.php');
 
 spl_autoload_register(function($className) {
-    $className = strtolower(str_replace('_', '/', $className));
+    $className = strtolower(str_replace('\\', '/', $className));    
     $filePath = 'include/includes/class/'.$className.'.php';
 
     if(file_exists($filePath)) {
