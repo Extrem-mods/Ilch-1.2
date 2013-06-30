@@ -16,6 +16,7 @@ if ($menu->get(1) == "confirm" AND isset($_GET[ 'check' ])) {
     $erg = db_query("SELECT * FROM `prefix_usercheck` WHERE `check` = '" . escape($_GET[ 'check' ], 'string') . "'");
     if (db_num_rows($erg) == 1) {
         $row = db_fetch_assoc($erg);
+        $row[ 'name_clean' ] = escape(get_lower($row[ 'name' ]), 'string');
         switch ($row[ 'ak' ]) {
             // confirm regist
             case 1:

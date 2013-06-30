@@ -437,7 +437,7 @@ function user_regist($name, $mail, $pass)
         return (false);
     }
 
-    $mail = get_lower($mail);
+    $mail = get_lower(escape_for_email($mail));
     $erg = db_query("SELECT `id` FROM `prefix_user` WHERE `email` = BINARY '" . $mail . "'");
     if (db_num_rows($erg) > 0) {
         return (false);
