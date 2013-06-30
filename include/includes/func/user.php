@@ -143,7 +143,7 @@ function user_login_check($auto = false)
         } else {
             $lower = get_lower($_POST['email']);
             $value = escape($lower, 'string');
-            $term = "name_clean = '" . $value . "'";
+            $term = "name_clean = BINARY '" . $value . "'";
             debug('Login mit Nickname: ' . $value);
         }
         if ($lower != $value) {
@@ -431,7 +431,7 @@ function user_regist($name, $mail, $pass)
 
     $crypt = new PwCrypt();
 
-    $name_clean = get_lower($name);
+    $name_clean = escape(get_lower($name), 'string');
     $erg = db_query("SELECT `id` FROM `prefix_user` WHERE `name_clean` = BINARY '" . $name_clean . "'");
     if (db_num_rows($erg) > 0) {
         return (false);

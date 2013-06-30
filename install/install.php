@@ -27,7 +27,7 @@ function getInstallprofileComment($file) {
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <title>... ::: [ I n s t a l l a t i o n &nbsp; f &uuml; r &nbsp; C l a n s c r i p t &nbsp; v o n &nbsp; i l c h ] ::: ...</title>
         <link rel="stylesheet" href="../include/designs/ilchClan12/style.css" type="text/css">
-        <link rel="stylesheet" href="../include/includes/css/jquery/templates/redmond/jquery-ui-1.8.21.custom.css" type="text/css">
+        <link rel="stylesheet" href="../include/includes/css/jquery/templates/redmond/jquery.ui.theme.css" type="text/css"> 
         <style type="text/css">.hide { display:none; }</style>
 
     </head>

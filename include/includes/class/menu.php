@@ -193,7 +193,9 @@ class menu {
             'remind',
             '13',
             '3',
-            'logout'
+            'logout',
+            '8',             //Profil
+            'profil'
             );
         if ($exit === true AND $this->get(0) == 'user' AND in_array($this->get(1), $alwaysallowed)) {
             $exit = false;
