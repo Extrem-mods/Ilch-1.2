@@ -71,19 +71,19 @@ class PwCrypt
     /**
     * Liefert eine Zufallszahl zwichen gewählten Grenzen
     * 
-    *Liefert Eine Zufallszahl zwichen $min und $max. Der Parameter $quality bestimmt die Qualität der verwendeten Zufallszahlen.
+    *Liefert Eine Zufallszahl zwischen $min und $max. Der Parameter $quality bestimmt die Qualität der verwendeten Zufallszahlen.
     * 1: Die Zufallszahlen werden durch einen Pseudozufallsgenerator erzeugt
-    * 2: Die Zahlen werden duch einen Pseudozufallszahlen Generator erzeugt, welcher regelmäßig mit echten Zufallszahlen neu initiiert wird
-    * 3: Echte Zufallszahlen. Diese sind allerdings nur begrenztz verfügbar und blockieren, wenn die verfügbare entropie erschöpft ist.
-    * Es wird empfohlen die my_crypt erweiterung zu installieren, ohen diese stehet unter Windows nur Qualitätsstufe 1 zur Verfügung.
+    * 2: Die Zahlen werden durch einen Pseudozufallszahlen Generator erzeugt, welcher regelmäßig mit echten Zufallszahlen neu initiiert wird
+    * 3: Echte Zufallszahlen. Diese sind allerdings nur begrenzt verfügbar und blockieren, wenn die verfügbare Entropie erschöpft ist.
+    * Es wird empfohlen die my_crypt Erweiterung zu installieren, ohne diese steht unter Windows nur Qualitätsstufe 1 zur Verfügung.
     * 
     * @author finke <Surf-finke@gmx.de>
     * @param $min Der niedrigste zurückzugebende Wert (Vorgabe: 0) 
-    * @param $max Der nhöchste zurückzugebende Wert (Vorgabe: 255, max ) 
+    * @param $max Der nhöchste zurückzugebende Wert (Vorgabe: 4294967296) 
     * @param $quality Angabe über die Qualität der Zufallszahlen. (1-3, Vorgabe 2)
-    * @return int Zufahlszahl
+    * @return int die Zufallszahl oder false im Fehlerfall
     */
-    public static function getRndNumber($min = 0, $max = 255, &$quality = 2){
+    public static function ($min = 0, $max = 4294967295, &$quality = 2){
         $quality = intval($quality);
         if($min > $max){
             return false;
@@ -174,7 +174,7 @@ class PwCrypt
             $pool .= '-_.~';
         }
 
-        //restiliche Sonderzeichen
+        //restliche Sonderzeichen
         if ($chars & self::SPECIAL_CHARACTERS) {
             $pool .= '!#$%&()*+,/:;=?@[]';
         }
@@ -202,7 +202,7 @@ class PwCrypt
 
     /**
      * Erstellt eine zufällige Zeichenkette die garantiert eineindeutig ist
-     * Der erste Teil, je nach Verwendeten Zeichen 8-10 Stellen, werden dabei in abhänigkeit der Systemzeit berechet, der rest wird zufällig aufgefüllt.
+     * Der erste Teil, je nach Verwendeten Zeichen 8-10 Stellen, werden dabei in Abhängigkeit der Systemzeit berechnet, der Rest wird zufällig aufgefüllt.
      *
      * @param integer $size Länge der Zeichenkette
      * @param integer $chars Angabe welche Zeichen für die Zeichenkette verwendet werden
