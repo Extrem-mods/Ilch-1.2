@@ -83,7 +83,7 @@ class PwCrypt
     * @param $quality Angabe über die Qualität der Zufallszahlen. (1-3, Vorgabe 2)
     * @return int die Zufallszahl oder false im Fehlerfall
     */
-    public static function ($min = 0, $max = 4294967295, &$quality = 2){
+    public static function getRndNumber($min = 0, $max = 4294967295, &$quality = 2){
         $quality = intval($quality);
         if($min > $max){
             return false;
