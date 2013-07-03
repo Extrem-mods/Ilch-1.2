@@ -83,13 +83,22 @@ class PwCrypt
     * @param $quality Angabe über die Qualität der Zufallszahlen. (1-3, Vorgabe 2)
     * @return int die Zufallszahl oder false im Fehlerfall
     */
-    public static function getRndNumber($min = 0, $max = 4294967295, &$quality = 2){
+    public static function getRndNumber($min = 0, $max = 4294967295, &$quality = 2){        
         $quality = intval($quality);
-        if($min > $max){
+        $min = intval($min);
+        $max = intval($max);
+        
+        if($min > $max){            
             return false;
         }
-        $bytes = (int)ceil(log($max, 2)/8);
+        
+        $diff = $max - $min;
+        
+        
+        
+        $bytes = (int)ceil(log($diff, 2)/8);
         if($bytes > 4){
+            throw RangeException('Die angegebenen Granzen ('.$min.', '.$max.') für die Erzeugung der Zufallszahl liegen zu weit auseinander, der maximale abszand beträgt  4.294.967.295. Angegeben: '.$diff);
             return false;
         }        
         $n = $max - $min + 1;
